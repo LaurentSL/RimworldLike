@@ -4,10 +4,13 @@ import sys
 
 import pygame
 
+from lhes.data.player_input import PlayerInput
 from lhes.game import settings
-from lhes.game.components.component import Component
+from lhes.game.character import Character
 from lhes.game.components.input import Input
 from lhes.game.screen import Screen
+from lhes.tools.camera_group import CameraGroup
+from lhes.tools.component import Component
 
 
 class Game:
@@ -25,30 +28,34 @@ class Game:
         self._components: list[Component] = []
         self._input = Input(self)
         self._components.append(self._input)
+        self._player_input = PlayerInput()
+        # Characters
+        self._camera_group = CameraGroup()
+        self._all_sprites = pygame.sprite.Group()
+        self._characters = pygame.sprite.Group()
+        Character([self._all_sprites, self._camera_group, self._characters])
+
+        # TODO: Test to delete
+        self._ground_test = pygame.Surface((250, 250))
+        self._ground_test.fill('yellow')
 
     def run(self):
-        while not self._input.ask_to_exit:
+        while not self._player_input.ask_to_exit:
             self._update()
             self._draw()
-            self._fps()
         self._exit()
 
     def _update(self):
-        deltatime = self._clock.tick() / 1000
+        deltatime = self._clock.tick(settings.FPS) / 1000
         for component in self._components:
             component.update(deltatime)
+        self._all_sprites.update(deltatime)
+        self._camera_group.update(deltatime)
 
     def _draw(self):
         self._screen.clear('black')
-        # player_position = self.player.position
-        # camera_offset = self.screen.get_camera_offset(player_position)
-        # self.level.draw(self.screen.display_surface, camera_offset)
-        # self.ui.draw(self.player)
-        # self.screen.debug_draw(player_position, self.level.visible_sprites)
+        self._camera_group.custom_draw(self._ground_test)
         self._screen.draw()
-
-    def _fps(self):
-        self._clock.tick(settings.FPS)
 
     @staticmethod
     def _exit():

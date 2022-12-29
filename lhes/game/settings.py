@@ -7,6 +7,12 @@ SCREEN_HEIGHT = 720
 SCREEN_TITLE = "RimworldLike"
 FPS = 60
 TILE_SIZE = 64
+
+# Log format
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(name)s - %(filename)s - %(module)s.%(funcName)s:%(lineno)s - %(message)s"
 LOG_FILENAME = 'log/game.log'
 LOG_LEVEL = logging.DEBUG
+
+# Camera
+CAMERA_MOVE_SPEED = 50
+CAMERA_ZOOM_SPEED = 3
