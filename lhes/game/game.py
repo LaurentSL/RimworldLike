@@ -4,40 +4,31 @@ import sys
 
 import pygame
 
-from lhes.data.player_input import PlayerInput
 from lhes.game import settings
-from lhes.game.character import Character
-from lhes.game.components.input import Input
-from lhes.game.screen import Screen
-from lhes.tools.camera_group import CameraGroup
-from lhes.tools.component import Component
+from lhes.game.level import Level
+from lhes.game.player_input import PlayerInput
+from lhes.tools import utils
 
 
 class Game:
 
     def __init__(self):
         # Logger
-        logging.basicConfig(filename=settings.LOG_FILENAME, level=settings.LOG_LEVEL, format=settings.LOG_FORMAT)
-        logging.info("Game is starting")
+        utils.set_logger()
+        logging.info(f"Game is starting (LogLevel is {settings.LOG_LEVEL}")
         # Pygame
         pygame.init()
-        self._screen = Screen(settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
+        self._screen: pygame.Surface = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
+        size = (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT - 50)
+        self._map_surface: pygame.Surface = pygame.Surface(size)
+        size = (settings.SCREEN_WIDTH, 50)
+        self._menu_surface: pygame.Surface = pygame.Surface(size)
         pygame.display.set_caption(settings.SCREEN_TITLE)
         self._clock = pygame.time.Clock()
-        # Components
-        self._components: list[Component] = []
-        self._input = Input(self)
-        self._components.append(self._input)
+        # Player input
         self._player_input = PlayerInput()
-        # Characters
-        self._camera_group = CameraGroup()
-        self._all_sprites = pygame.sprite.Group()
-        self._characters = pygame.sprite.Group()
-        Character([self._all_sprites, self._camera_group, self._characters])
-
-        # TODO: Test to delete
-        self._ground_test = pygame.Surface((250, 250))
-        self._ground_test.fill('yellow')
+        # Level
+        self._level = Level()
 
     def run(self):
         while not self._player_input.ask_to_exit:
@@ -47,15 +38,16 @@ class Game:
 
     def _update(self):
         deltatime = self._clock.tick(settings.FPS) / 1000
-        for component in self._components:
-            component.update(deltatime)
-        self._all_sprites.update(deltatime)
-        self._camera_group.update(deltatime)
+        pygame.display.set_caption(f"{settings.SCREEN_TITLE} - {round(self._clock.get_fps())} FPS")
+        self._level.update(deltatime)
 
     def _draw(self):
-        self._screen.clear('black')
-        self._camera_group.custom_draw(self._ground_test)
-        self._screen.draw()
+        self._screen.fill('black')
+        self._menu_surface.fill('red')
+        self._level.draw(self._map_surface)
+        self._screen.blit(self._map_surface, (0, 0))
+        self._screen.blit(self._menu_surface, (0, settings.SCREEN_HEIGHT - 50))
+        pygame.display.update()
 
     @staticmethod
     def _exit():

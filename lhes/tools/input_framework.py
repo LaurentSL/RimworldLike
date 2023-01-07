@@ -3,7 +3,7 @@ import logging
 import pygame
 from pygame.event import Event
 
-from lhes.data.player_input import PlayerInput
+from lhes.game.player_input import PlayerInput
 from lhes.tools.component import Component
 
 
