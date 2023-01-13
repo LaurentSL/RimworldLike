@@ -38,7 +38,7 @@ class Location(pygame.sprite.Sprite):
         lhes.tools.utils.draw_text(self.image, self.position, pygame.font.Font(None, 16), "black", (0, 0), "center")
 
     def _on_left_mouse_button_down(self):
-        if not self._player_input.left_button:
+        if not self._player_input.left_button_clicked:
             return
         if not self.rect.collidepoint(self._player_input.mouse_position):
             return

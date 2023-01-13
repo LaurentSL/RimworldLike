@@ -101,7 +101,7 @@ class CameraGroup(pygame.sprite.Group):
         return (screen_position / self._zoom_scale) + self._camera_position
 
     def _on_left_mouse_button_down(self):
-        if not self._player_input.left_button:
+        if not self._player_input.left_button_clicked:
             return
         for sprite in self.sprites():
             position = pygame.Vector2(self._player_input.mouse_position) - self._offset

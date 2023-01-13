@@ -7,6 +7,7 @@ import pygame
 from lhes.game import settings
 from lhes.game.level import Level
 from lhes.game.player_input import PlayerInput
+from lhes.game.ui.menu import Menu
 from lhes.tools import utils
 
 
@@ -21,8 +22,10 @@ class Game:
         self._screen: pygame.Surface = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
         size = (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT - 50)
         self._map_surface: pygame.Surface = pygame.Surface(size)
-        size = (settings.SCREEN_WIDTH, 50)
-        self._menu_surface: pygame.Surface = pygame.Surface(size)
+        self._menu = Menu(settings.SCREEN_WIDTH, 50)
+        self._menu.add_button("Quit1", self._on_quit)
+        self._menu.add_button("Quit 2", self._on_quit)
+        self._menu.add_button("Test", None)
         pygame.display.set_caption(settings.SCREEN_TITLE)
         self._clock = pygame.time.Clock()
         # Player input
@@ -40,13 +43,13 @@ class Game:
         deltatime = self._clock.tick(settings.FPS) / 1000
         pygame.display.set_caption(f"{settings.SCREEN_TITLE} - {round(self._clock.get_fps())} FPS")
         self._level.update(deltatime)
+        self._menu.update(deltatime)
 
     def _draw(self):
         self._screen.fill('black')
-        self._menu_surface.fill('red')
         self._level.draw(self._map_surface)
         self._screen.blit(self._map_surface, (0, 0))
-        self._screen.blit(self._menu_surface, (0, settings.SCREEN_HEIGHT - 50))
+        self._menu.draw(self._screen)
         pygame.display.update()
 
     @staticmethod
@@ -54,3 +57,6 @@ class Game:
         logging.info("Game is over")
         pygame.quit()
         sys.exit()
+
+    def _on_quit(self):
+        self._player_input.ask_to_exit = True

@@ -21,7 +21,7 @@ class Input(InputFramework):
 
     def _on_mouse_motion(self, event: Event):
         super(Input, self)._on_mouse_motion(event)
-        if self._player_input.right_button:
+        if self._player_input.right_button_down:
             self._camera_move(self._player_input.mouse_movement)
 
     # Game functions
