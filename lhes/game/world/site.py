@@ -1,4 +1,4 @@
-import logging
+import itertools
 
 import pygame
 
@@ -9,14 +9,14 @@ from lhes.game.world.map_size import MapSize
 from lhes.game.world.quadrums import Quadrums
 from lhes.game.world.river import River
 from lhes.game.world.road import Road
+from lhes.game.world.site_factory import SiteFactory
 from lhes.game.world.site_terrain import SiteTerrain
-from lhes.game.world.terrain import Terrain
+from lhes.tools.decorator_timeit import timeit
 
 
 class Site:
 
     def __init__(self):
-
         self._map_size: MapSize = MapSize.DEV
 
         self._biome: Biome = None
@@ -45,8 +45,9 @@ class Site:
 
         self._location_group: pygame.sprite.Group = pygame.sprite.Group()
         self._size: pygame.Vector2 = pygame.Vector2(self._map_size, self._map_size)
-        self._grid: list[list[Location]] = []
+        self._grid: list[list[Location]] = None
 
+        self._grid = None
         self.generate()
 
     # TODO: Caves
@@ -79,24 +80,17 @@ class Site:
     #  You may find Agarilux, Bryolux or Glowstool in these caves. Instead of needing light to grow, they die when
     #  exposed to excess sunlight.
 
-    def generate(self):
-        logging.debug("Start generating map")
-        for row in range(int(self._size.y)):
-            locations = []
-            for column in range(int(self._size.x)):
-                position = pygame.Vector2(column, row)
-                terrain = Terrain.get_random()
-                locations.append(Location([self._location_group], position, terrain))
-            self._grid.append(locations)
-        logging.debug("End generating map")
-
     def get_location_group(self):
         return self._location_group
 
     def _debug(self):
-        for row in range(int(self._size.y)):
-            for column in range(int(self._size.x)):
-                print(f"location: {self._grid[row][column].rect}")
+        for row, column in itertools.product(range(int(self._size.y)), range(int(self._size.x))):
+            print(f"location: {self._grid[row][column].rect}")
 
     def get_map_size(self):
         return self._map_size
+
+    @timeit
+    def generate(self):
+        return SiteFactory.generate_by_random_method(self._map_size, self._location_group)
+        # return SiteFactory.generate_by_diamond_square(self._map_size, self._location_group)

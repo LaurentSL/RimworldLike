@@ -15,7 +15,7 @@ class Level:
         self._components: list[Component] = []
         self._input = Input(self)
         self._components.append(self._input)
-        self._player_input = PlayerInput()
+        self._player_input: PlayerInput = PlayerInput()
         # world
         self._world = World()
         # Characters

@@ -39,12 +39,6 @@ class InputFramework(Component):
         pygame.event.set_allowed([pygame.QUIT])
         self._player_input = PlayerInput()
 
-        self.left_button: bool = False
-        self.middle_button: bool = False
-        self.right_button: bool = False
-        self.mouse_position: tuple[int, int] = (0, 0)
-        self.mouse_movement: tuple[int, int] = (0, 0)
-
     def set_allowed(self, events_allowed: list[Event]):
         pygame.event.set_blocked(None)
         if pygame.QUIT not in events_allowed:
@@ -92,16 +86,16 @@ class InputFramework(Component):
                 self._on_mouse_right_button_down(event)
 
     def _on_mouse_left_button_down(self, event: Event):
-        self.left_button = event.buttons[0]
-        self.mouse_position = event.pos
+        self._player_input.left_button = True
+        self._player_input.mouse_position = event.pos
 
     def _on_mouse_middle_button_down(self, event: Event):
-        self.middle_button = event.buttons[1]
-        self.mouse_position = event.pos
+        self._player_input.middle_button = True
+        self._player_input.mouse_position = event.pos
 
     def _on_mouse_right_button_down(self, event: Event):
-        self.right_button = event.buttons[2]
-        self.mouse_position = event.pos
+        self._player_input.right_button = True
+        self._player_input.mouse_position = event.pos
 
     def _on_mouse_button_up(self, event: Event):
         match event.button:
@@ -113,23 +107,23 @@ class InputFramework(Component):
                 self._on_mouse_right_button_up(event)
 
     def _on_mouse_left_button_up(self, event: Event):
-        self.left_button = event.buttons[0]
-        self.mouse_position = event.pos
+        self._player_input.left_button = False
+        self._player_input.mouse_position = event.pos
 
     def _on_mouse_middle_button_up(self, event: Event):
-        self.middle_button = event.buttons[1]
-        self.mouse_position = event.pos
+        self._player_input.middle_button = False
+        self._player_input.mouse_position = event.pos
 
     def _on_mouse_right_button_up(self, event: Event):
-        self.right_button = event.buttons[2]
-        self.mouse_position = event.pos
+        self._player_input.right_button = False
+        self._player_input.mouse_position = event.pos
 
     def _on_mouse_motion(self, event: Event):
-        self.left_button = event.buttons[0]
-        self.middle_button = event.buttons[1]
-        self.right_button = event.buttons[2]
-        self.mouse_position = event.pos
-        self.mouse_movement = event.rel
+        self._player_input.left_button = event.buttons[0]
+        self._player_input.middle_button = event.buttons[1]
+        self._player_input.right_button = event.buttons[2]
+        self._player_input.mouse_position = event.pos
+        self._player_input.mouse_movement = event.rel
 
     def _on_key_down(self, event: Event):
         pass

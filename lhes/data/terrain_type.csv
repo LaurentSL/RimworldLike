@@ -1,0 +1,21 @@
+Id;Name                   ;Move Speed Modifier;Fertility;Terrain Support;Color ;FR
+1 ;Deep ocean water       ;0                  ;0        ;None           ;blue  ;Eau profonde de l'oc�an
+2 ;Shallow ocean water    ;30                 ;0        ;None           ;blue  ;Eau de mer peu profonde
+3 ;Deep water             ;0                  ;0        ;None           ;blue  ;Eau profonde
+4 ;Chest-deep moving water;22                 ;0        ;None           ;blue  ;Eau en mouvement jusqu'� la poitrine
+5 ;Shallow moving water   ;30                 ;0        ;None           ;blue  ;Eau mobile peu profonde
+6 ;Shallow water          ;30                 ;0        ;None           ;blue  ;Eau peu profonde
+7 ;Ice                    ;52                 ;0        ;Heavy          ;white ;Glace
+8 ;Soft sand              ;52                 ;0        ;Light          ;yellow;Sable mou
+9 ;Sand                   ;76                 ;10       ;Heavy          ;yellow;Sable
+10;Broken asphalt         ;100                ;0        ;Heavy          ;black ;Asphalte bris�
+11;Lichen-covered soil    ;81                 ;100      ;Heavy          ;brown ;Sol recouvert de lichen
+12;Marsh                  ;30                 ;0        ;None           ;orange;Marais
+13;Marshy soil            ;46                 ;100      ;Light          ;orange;Sol mar�cageux
+14;Mud                    ;52                 ;0        ;None           ;orange;Boue
+15;Packed dirt            ;100                ;0        ;Heavy          ;yellow;Terre tass�e
+16;Rich soil              ;87                 ;140      ;Heavy          ;green ;Sol riche
+17;Rough stone            ;87                 ;0        ;Heavy          ;green ;Pierre brute
+18;Rough-hewn stone       ;93                 ;0        ;Heavy          ;green ;Pierre brute
+19;Soil                   ;87                 ;100      ;Heavy          ;green ;Sol
+20;Stony soil             ;87                 ;70       ;Heavy          ;green ;Sol pierreux

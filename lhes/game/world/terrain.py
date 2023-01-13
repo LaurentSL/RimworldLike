@@ -37,6 +37,9 @@ mined out. What remains are terrain tiles listed as 'overhead mountain'."""
         # TODO: Filth masks, proper terrain affordance, driesTo, extinguishesFire, beauty, cleanliness, deterioration,
         #  special attacks, traversedThought, perceived path costs vs path costs
 
+    def __str__(self):
+        return f"Terrain({self._terrain_type_id}) with mountain: {self._is_mountain} or geyser: {self._is_geyser}"
+
     def get_terrain_type(self) -> dict[str, str]:
         return self._terrain_type.get(self._terrain_type_id)
 

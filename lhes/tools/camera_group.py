@@ -16,6 +16,7 @@ class CameraGroup(pygame.sprite.Group):
 
         self._camera_position = pygame.Vector2(0, 0)
         self._zoom_scale = 1.0
+        self._offset: pygame.Vector2 = pygame.Vector2(0, 0)
 
         # map surface
         self._map_size = pygame.Vector2(map_size, map_size)
@@ -31,6 +32,9 @@ class CameraGroup(pygame.sprite.Group):
         self._draw_ground(ground_surface)
         self._draw_y_sorted_sprites()
         scaled_rect, scaled_surf = self._zoom(pygame.Vector2(surface.get_size()) / 2)
+        rect = surface.get_rect()
+        self._offset.x = (rect.width - scaled_rect.width) // 2
+        self._offset.y = (rect.height - scaled_rect.height) // 2
         self._blit_surface(surface, scaled_rect, scaled_surf)
 
     def _clear(self, surface):
@@ -54,6 +58,7 @@ class CameraGroup(pygame.sprite.Group):
     def _zoom(self, surface_half_size_vector: pygame.Vector2):
         scaled_surf = pygame.transform.scale(self._map_surface,
                                              self._map_pixel_size_vector * self._zoom_scale)
+        # scaled_rect = scaled_surf.get_rect(topleft=(0, 0))
         scaled_rect = scaled_surf.get_rect(center=surface_half_size_vector - self._camera_position)
         return scaled_rect, scaled_surf
 
@@ -76,6 +81,7 @@ class CameraGroup(pygame.sprite.Group):
     def camera_update(self, deltatime) -> None:
         self._update_camera_move_vector(deltatime)
         self._update_camera_zoom(deltatime)
+        self._on_left_mouse_button_down()
 
     def _update_camera_move_vector(self, deltatime):
         if self._player_input.camera_move_vector == pygame.Vector2(0, 0):
@@ -93,3 +99,16 @@ class CameraGroup(pygame.sprite.Group):
 
     def _screen_to_world(self, screen_position: pygame.Vector2):
         return (screen_position / self._zoom_scale) + self._camera_position
+
+    def _on_left_mouse_button_down(self):
+        if not self._player_input.left_button:
+            return
+        for sprite in self.sprites():
+            position = pygame.Vector2(self._player_input.mouse_position) - self._offset
+            position = self._screen_to_world(position)
+            if sprite.rect.collidepoint(position):
+                print("camera_group.on_left_mouse_button_down", self._player_input.mouse_status())
+                print(f"camera_group.on_left_mouse_button_down, Offset map vs screen: {self._offset}")
+                print(f"camera_group.on_left_mouse_button_down, Position: {position}")
+                print(f"camera_group.on_left_mouse_button_down, Sprite rect: {sprite.rect}")
+                print(f"camera_group.on_left_mouse_button_down, Sprite: {sprite}")

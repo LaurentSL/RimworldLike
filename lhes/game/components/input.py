@@ -1,7 +1,6 @@
 import pygame
 from pygame.event import Event
 
-from lhes.game.player_input import PlayerInput
 from lhes.tools.input_framework import InputFramework
 
 
@@ -9,8 +8,8 @@ class Input(InputFramework):
 
     def __init__(self, owner: object):
         super().__init__(owner)
-        self.set_allowed([pygame.QUIT, pygame.MOUSEMOTION, pygame.MOUSEWHEEL])
-        self._player_input = PlayerInput()
+        self.set_allowed([pygame.QUIT,
+                          pygame.MOUSEBUTTONUP, pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION, pygame.MOUSEWHEEL])
 
     def update(self, deltatime):
         self._reinit()
@@ -22,8 +21,8 @@ class Input(InputFramework):
 
     def _on_mouse_motion(self, event: Event):
         super(Input, self)._on_mouse_motion(event)
-        if self.right_button:
-            self._camera_move(self.mouse_movement)
+        if self._player_input.right_button:
+            self._camera_move(self._player_input.mouse_movement)
 
     # Game functions
 
