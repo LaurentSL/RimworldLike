@@ -1,5 +1,6 @@
 import pygame.sprite
 
+import lhes.tools.ui.utils
 import lhes.tools.utils
 from lhes.game.player_input import PlayerInput
 
@@ -39,7 +40,7 @@ class Button(pygame.sprite.Sprite):
         rect = self.image.get_rect()
         pygame.draw.rect(self.image, 'black', rect.inflate(-1, -1), 2)
         pygame.draw.rect(self.image, 'white', rect.inflate(-3, -3), 2)
-        lhes.tools.utils.draw_text(self.image, self._text, pygame.font.Font(None, 16), "black", (0, 0), "center")
+        lhes.tools.ui.utils.draw_text(self.image, self._text, pygame.font.Font(None, 16), "black", (0, 0), "center")
 
     def update(self, delta_time) -> None:
         super().update(delta_time)

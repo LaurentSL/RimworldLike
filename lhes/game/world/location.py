@@ -1,5 +1,6 @@
 import pygame
 
+import lhes.tools.ui.utils
 import lhes.tools.utils
 from lhes.game import settings
 from lhes.game.player_input import PlayerInput
@@ -35,7 +36,7 @@ class Location(pygame.sprite.Sprite):
         pygame.draw.rect(self.image, 'black', rect, 1)
         pygame.draw.rect(self.image, 'white', rect.inflate(-2, -2), 1)
         pygame.draw.rect(self.image, 'red', rect.inflate(-4, -4), 1)
-        lhes.tools.utils.draw_text(self.image, self.position, pygame.font.Font(None, 16), "black", (0, 0), "center")
+        lhes.tools.ui.utils.draw_text(self.image, self.position, pygame.font.Font(None, 16), "black", (0, 0), "center")
 
     def _on_left_mouse_button_down(self):
         if not self._player_input.left_button_clicked:

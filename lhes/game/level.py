@@ -10,16 +10,17 @@ from lhes.tools.component import Component
 
 class Level:
 
-    def __init__(self):
+    def __init__(self, rect: pygame.Rect):
+        self._rect = rect
+        self._player_input: PlayerInput = PlayerInput()
         # Components
         self._components: list[Component] = []
         self._input = Input(self)
         self._components.append(self._input)
-        self._player_input: PlayerInput = PlayerInput()
         # world
         self._world = World()
         # Characters
-        self._camera_group = CameraGroup(self._world.get_current_site_map_size())
+        self._camera_group = CameraGroup(self._rect, self._world.get_current_site_map_size())
         self._all_sprites = pygame.sprite.Group()
         self._characters = pygame.sprite.Group()
         self._all_sprites.add(self._world.get_location_group())

@@ -7,11 +7,12 @@ import pygame
 from lhes.game import settings
 from lhes.game.level import Level
 from lhes.game.player_input import PlayerInput
-from lhes.game.ui.menu import Menu
 from lhes.tools import utils
+from lhes.tools.ui.menu import Menu
 
 
 class Game:
+    MENU_HEIGHT = 50
 
     def __init__(self):
         # Logger
@@ -20,18 +21,23 @@ class Game:
         # Pygame
         pygame.init()
         self._screen: pygame.Surface = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
-        size = (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT - 50)
-        self._map_surface: pygame.Surface = pygame.Surface(size)
-        self._menu = Menu(settings.SCREEN_WIDTH, 50)
-        self._menu.add_button("Quit1", self._on_quit)
-        self._menu.add_button("Quit 2", self._on_quit)
-        self._menu.add_button("Test", None)
         pygame.display.set_caption(settings.SCREEN_TITLE)
         self._clock = pygame.time.Clock()
         # Player input
         self._player_input = PlayerInput()
-        # Level
-        self._level = Level()
+        # Screen components
+        self._rect_map: pygame.Rect = pygame.Rect(
+            0, 0, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT - self.MENU_HEIGHT)
+        self._rect_menu: pygame.Rect = pygame.Rect(
+            0, settings.SCREEN_HEIGHT - self.MENU_HEIGHT, settings.SCREEN_WIDTH, self.MENU_HEIGHT)
+        self._map_surface: pygame.Surface = pygame.Surface(self._rect_map.size)
+        self._level = Level(self._rect_map)
+        self._menu: Menu = None
+        self._init_menu(self._rect_menu)
+
+    def _init_menu(self, rect: pygame.Rect):
+        self._menu = Menu(rect)
+        self._menu.add_button("Quit", self._on_quit)
 
     def run(self):
         while not self._player_input.ask_to_exit:

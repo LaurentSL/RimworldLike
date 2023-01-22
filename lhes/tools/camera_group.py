@@ -10,18 +10,31 @@ class CameraGroup(pygame.sprite.Group):
     ZOOM_MIN = 0.2
     ZOOM_MAX = 3
 
-    def __init__(self, map_size: MapSize):
+    def __init__(self, display_rect: pygame.Rect, map_size: MapSize):
         super().__init__()
-        self._player_input: PlayerInput = PlayerInput()
 
-        self._camera_position = pygame.Vector2(0, 0)
-        self._zoom_scale = 1.0
-        self._offset: pygame.Vector2 = pygame.Vector2(0, 0)
+        # display rect
+        self._display_rect = display_rect
 
         # map surface
         self._map_size = pygame.Vector2(map_size, map_size)
         self._map_pixel_size_vector: pygame.Vector2 = self._map_size * settings.TILE_SIZE
         self._map_surface = pygame.Surface(self._map_pixel_size_vector)
+
+        # scaled map surface
+
+        # camera params
+        self._camera_position = pygame.Vector2(0, 0)
+        self._zoom_scale = 1.0
+        self._offset: pygame.Vector2 = pygame.Vector2(0, 0)
+
+        # global player input data
+        self._player_input: PlayerInput = PlayerInput()
+
+    def __str__(self):
+        return f"CameraGroup - Camera position: {self._camera_position}, zoom scale: {self._zoom_scale}, " \
+               f"offset map vs screen: {self._offset} ; " \
+               f"Map - size: {self._map_size}, pixel size: {self._map_pixel_size_vector}"
 
     def custom_draw(
             self,
@@ -63,7 +76,7 @@ class CameraGroup(pygame.sprite.Group):
         return scaled_rect, scaled_surf
 
     def _blit_surface(self, surface: pygame.Surface, scaled_rect: pygame.Rect, scaled_surf: pygame.Surface):
-        self._restrict_camera_position(scaled_rect, surface)
+        # self._restrict_camera_position(scaled_rect, surface)
         surface.blit(scaled_surf, scaled_rect)
 
     @staticmethod
@@ -88,6 +101,8 @@ class CameraGroup(pygame.sprite.Group):
             return
         self._camera_position -= self._player_input.camera_move_vector * settings.CAMERA_MOVE_SPEED * deltatime
 
+        # if
+
     def _update_camera_zoom(self, deltatime):
         if self._player_input.camera_zoom_scale == 0:
             return
@@ -103,12 +118,15 @@ class CameraGroup(pygame.sprite.Group):
     def _on_left_mouse_button_down(self):
         if not self._player_input.left_button_clicked:
             return
+        if not self._display_rect.collidepoint(self._player_input.mouse_position):
+            return
         for sprite in self.sprites():
             position = pygame.Vector2(self._player_input.mouse_position) - self._offset
             position = self._screen_to_world(position)
             if sprite.rect.collidepoint(position):
                 print("camera_group.on_left_mouse_button_down", self._player_input.mouse_status())
-                print(f"camera_group.on_left_mouse_button_down, Offset map vs screen: {self._offset}")
-                print(f"camera_group.on_left_mouse_button_down, Position: {position}")
-                print(f"camera_group.on_left_mouse_button_down, Sprite rect: {sprite.rect}")
+                # print(f"camera_group.on_left_mouse_button_down, Offset map vs screen: {self._offset}")
+                # print(f"camera_group.on_left_mouse_button_down, Position: {position}")
+                # print(f"camera_group.on_left_mouse_button_down, Sprite rect: {sprite.rect}")
+                print(f"camera_group.on_left_mouse_button_down, Camera: {self}")
                 print(f"camera_group.on_left_mouse_button_down, Sprite: {sprite}")
