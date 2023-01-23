@@ -116,12 +116,12 @@ class InputFramework(Component):
 
     def _on_mouse_middle_button_up(self, event: Event):
         self._player_input.middle_button_down = False
-        self._player_input.left_button_clicked = True
+        self._player_input.middle_button_clicked = True
         self._player_input.mouse_position = event.pos
 
     def _on_mouse_right_button_up(self, event: Event):
         self._player_input.right_button_down = False
-        self._player_input.left_button_clicked = True
+        self._player_input.right_button_clicked = True
         self._player_input.mouse_position = event.pos
 
     def _on_mouse_motion(self, event: Event):
