@@ -35,7 +35,7 @@ class Level:
         for component in self._components:
             component.update(deltatime)
         self._all_sprites.update(deltatime)
-        self._camera_group.camera_update(deltatime)
+        self._camera_group.update(deltatime)
 
     def draw(self, surface: pygame.Surface):
         self._camera_group.custom_draw(surface, self._ground_test)
