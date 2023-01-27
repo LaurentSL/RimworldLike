@@ -32,7 +32,6 @@ class Button(pygame.sprite.Sprite):
         self._position = position
         self.image = pygame.Surface(size)
         self.rect = self.image.get_rect(topleft=self._position)
-        print(self.rect)
         self._draw()
 
     def _draw(self):
