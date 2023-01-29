@@ -1,5 +1,6 @@
 import csv
 import logging
+import math
 import pathlib
 
 import pygame
@@ -86,3 +87,7 @@ def restrict(
         value_min, value_max = value_max, value_min
     # print(f"restrict({value}, {value_min}, {value_max}) = {max(value_min, min(value, value_max))}")
     return max(value_min, min(value, value_max))
+
+
+def floor_vector2(vector: pygame.Vector2) -> pygame.Vector2:
+    return pygame.Vector2(math.floor(vector.x), math.floor(vector.y))

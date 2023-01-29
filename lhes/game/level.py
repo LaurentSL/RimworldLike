@@ -39,3 +39,12 @@ class Level:
 
     def draw(self, surface: pygame.Surface):
         self._camera_group.custom_draw(surface, self._ground_test)
+
+    def screen_position_to_world_position(self, screen_position: pygame.Vector2):
+        return self._camera_group.screen_position_to_world_position(screen_position)
+
+    def screen_position_to_tile_coord(self, screen_position: pygame.Vector2):
+        return self._camera_group.screen_position_to_tile_coord(screen_position)
+
+    def world_position_to_tile_coord(self, world_position: pygame.Vector2):
+        return self._camera_group.world_position_to_tile_coord(world_position)

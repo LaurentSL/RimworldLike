@@ -10,10 +10,10 @@ class Camera:
     ZOOM_MAX = 3
 
     def __init__(self, camera_rect: pygame.Rect, restriction_rect: pygame.Rect):
-        self._camera_rect: pygame.Rect = camera_rect
+        self._camera_rect: pygame.Rect = camera_rect.copy()
         self._restriction_rect: pygame.Rect = restriction_rect
-        self._restriction_zoom_rect: pygame.Rect = restriction_rect.copy()
-        self._zoom_scale: float = 1.0
+        self._restriction_rect_at_the_scale: pygame.Rect = restriction_rect.copy()
+        self._zoom_scale: float = 2.0
         self._restrict_position()
         self._player_input: PlayerInput = PlayerInput()
 
@@ -44,27 +44,34 @@ class Camera:
         self._restrict_position()
 
     def _restrict_position(self):
-        self._camera_rect.clamp_ip(self._restriction_zoom_rect)
+        self._camera_rect.clamp_ip(self._restriction_rect_at_the_scale)
 
     def _update_camera_zoom(self, deltatime):
         if self._player_input.camera_zoom_scale == 0:
             return
-        old_screen_mouse_position = pygame.Vector2(self._player_input.mouse_position)
-        world_mouse_position = self.screen_to_world(old_screen_mouse_position)
+        old_screen_mouse_position = self._player_input.mouse_position_as_vector2
+        old_world_mouse_position = self.screen_to_world(old_screen_mouse_position)
         self._zoom_scale += self._player_input.camera_zoom_scale * settings.CAMERA_ZOOM_SPEED * deltatime
         self._zoom_scale = utils.restrict(self._zoom_scale, self.ZOOM_MIN, self.ZOOM_MAX)
         self._adjust_restriction_rect()
-        new_screen_mouse_position = self.world_to_screen(world_mouse_position)
-        delta = (new_screen_mouse_position - old_screen_mouse_position) * self._zoom_scale
-        self._camera_rect.move_ip(delta)
+        self._adjust_screen_position(old_screen_mouse_position, old_world_mouse_position)
         self._restrict_position()
 
+    def _adjust_screen_position(self, old_screen_mouse_position, old_world_mouse_position):
+        new_screen_mouse_position = self.world_to_screen(old_world_mouse_position)
+        delta = new_screen_mouse_position - old_screen_mouse_position
+        self._camera_rect.move_ip(delta)
+
     def _adjust_restriction_rect(self):
-        self._restriction_zoom_rect.width = self._restriction_rect.width * self._zoom_scale
-        self._restriction_zoom_rect.height = self._restriction_rect.height * self._zoom_scale
+        self._restriction_rect_at_the_scale.width = self._restriction_rect.width * self._zoom_scale
+        self._restriction_rect_at_the_scale.height = self._restriction_rect.height * self._zoom_scale
 
     def world_to_screen(self, world_position: pygame.Vector2) -> pygame.Vector2:
-        return (world_position - self.position) * self.zoom_scale
+        screen_position = world_position * self.zoom_scale - pygame.Vector2(self.position)
+        screen_position = utils.floor_vector2(screen_position)
+        return screen_position
 
     def screen_to_world(self, screen_position: pygame.Vector2) -> pygame.Vector2:
-        return (screen_position / self.zoom_scale) + self.position
+        world_position = (screen_position + pygame.Vector2(self.position)) / self.zoom_scale
+        world_position = utils.floor_vector2(world_position)
+        return world_position

@@ -15,8 +15,10 @@ class Character(pygame.sprite.Sprite):
                                    birthdate="25/12/2022",
                                    race="human"
                                    )
-        self.image = pygame.Surface((32, 32))
-        self.image.fill('red')
+        self.image = pygame.Surface((64, 64))
+        pygame.draw.circle(self.image, 'black', (32, 32), 30)
+        pygame.draw.circle(self.image, 'white', (32, 32), 28)
+        pygame.draw.circle(self.image, 'red', (32, 32), 24)
         self.rect = self.image.get_rect()
 
     def update(self, deltatime: float) -> None:

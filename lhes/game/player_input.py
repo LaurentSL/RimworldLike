@@ -25,3 +25,7 @@ class PlayerInput:
     def mouse_status(self):
         return f"Mouse status: Left: {self.left_button_down}, Middle: {self.middle_button_down}, Right: {self.right_button_down}, " \
                f"position: {self.mouse_position}, movement: {self.mouse_movement}"
+
+    @property
+    def mouse_position_as_vector2(self):
+        return pygame.Vector2(self.mouse_position)

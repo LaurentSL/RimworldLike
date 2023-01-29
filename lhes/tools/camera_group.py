@@ -3,6 +3,7 @@ import pygame.sprite
 from lhes.game import settings
 from lhes.game.player_input import PlayerInput
 from lhes.game.world.map_size import MapSize
+from lhes.tools import utils
 from lhes.tools.camera import Camera
 
 
@@ -12,7 +13,7 @@ class CameraGroup(pygame.sprite.Group):
         super().__init__()
 
         # display rect
-        self._display_rect = display_rect
+        self._display_rect = display_rect.copy()
 
         # map surface
         self._map_size = pygame.Vector2(map_size, map_size)
@@ -77,13 +78,15 @@ class CameraGroup(pygame.sprite.Group):
             return
         if not self._display_rect.collidepoint(self._player_input.mouse_position):
             return
-        for sprite in self.sprites():
-            position = pygame.Vector2(self._player_input.mouse_position)  # - self._offset
-            position = self._camera.screen_to_world(position)
-            if sprite.rect.collidepoint(position):
-                print("camera_group.on_left_mouse_button_down", self._player_input.mouse_status())
-                # print(f"camera_group.on_left_mouse_button_down, Offset map vs screen: {self._offset}")
-                # print(f"camera_group.on_left_mouse_button_down, Position: {position}")
-                # print(f"camera_group.on_left_mouse_button_down, Sprite rect: {sprite.rect}")
-                print(f"camera_group.on_left_mouse_button_down, Camera: {self}")
-                print(f"camera_group.on_left_mouse_button_down, Sprite: {sprite}")
+        sprite_coord = self.screen_position_to_tile_coord(self._player_input.mouse_position_as_vector2)
+
+    def screen_position_to_world_position(self, screen_position: pygame.Vector2):
+        return self._camera.screen_to_world(screen_position)
+
+    def screen_position_to_tile_coord(self, screen_position: pygame.Vector2):
+        world_position = self.screen_position_to_world_position(screen_position)
+        return self.world_position_to_tile_coord(world_position)
+
+    @staticmethod
+    def world_position_to_tile_coord(world_position: pygame.Vector2):
+        return utils.floor_vector2(world_position / settings.TILE_SIZE)
