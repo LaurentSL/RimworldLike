@@ -62,31 +62,34 @@ class CameraGroup(pygame.sprite.Group):
     def _draw_sprite(self, sprite: pygame.sprite.Sprite) -> None:
         self._map_surface.blit(sprite.image, sprite.rect.topleft)
 
-    def _zoom(self):
+    def _zoom(self) -> pygame.Surface:
         return pygame.transform.scale(self._map_surface, self._map_pixel_size_vector * self._camera.zoom_scale)
 
-    def _blit_surface(self, display_surface: pygame.Surface, scaled_surf: pygame.Surface):
+    def _blit_surface(self, display_surface: pygame.Surface, scaled_surf: pygame.Surface) -> None:
         position = -self._camera.position[0], -self._camera.position[1]
         display_surface.blit(scaled_surf, position)
 
     def update(self, deltatime) -> None:
         self._camera.update(deltatime)
-        self._on_left_mouse_button_down()
 
-    def _on_left_mouse_button_down(self):
-        if not self._player_input.left_button_clicked:
-            return
-        if not self._display_rect.collidepoint(self._player_input.mouse_position):
-            return
-        sprite_coord = self.screen_position_to_tile_coord(self._player_input.mouse_position_as_vector2)
-
-    def screen_position_to_world_position(self, screen_position: pygame.Vector2):
+    def screen_position_to_world_position(self, screen_position: pygame.Vector2) -> pygame.Vector2:
         return self._camera.screen_to_world(screen_position)
 
-    def screen_position_to_tile_coord(self, screen_position: pygame.Vector2):
+    def screen_position_to_tile_coord(self, screen_position: pygame.Vector2) -> pygame.Vector2:
         world_position = self.screen_position_to_world_position(screen_position)
         return self.world_position_to_tile_coord(world_position)
 
+    def world_position_to_screen_position(self, world_position: pygame.Vector2) -> pygame.Vector2:
+        return self._camera.world_to_screen(world_position)
+
     @staticmethod
-    def world_position_to_tile_coord(world_position: pygame.Vector2):
+    def world_position_to_tile_coord(world_position: pygame.Vector2) -> pygame.Vector2:
         return utils.floor_vector2(world_position / settings.TILE_SIZE)
+
+    @staticmethod
+    def tile_coord_to_world_position(tile_coord: pygame.Vector2) -> pygame.Vector2:
+        return tile_coord * settings.TILE_SIZE
+
+    def tile_coord_to_screen_position(self, tile_coord: pygame.Vector2) -> pygame.Vector2:
+        world_position = tile_coord * settings.TILE_SIZE
+        return self.world_position_to_screen_position(world_position)

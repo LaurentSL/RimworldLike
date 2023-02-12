@@ -1,6 +1,7 @@
 import logging
 
 # game setup
+
 DEBUG = False
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -22,3 +23,7 @@ CAMERA_ZOOM_SPEED = 3
 # Data files
 CSV_SEPARATOR = ";"
 TERRAIN_TYPE_CSV_FILENAME = "../data/terrain_type.csv"
+
+# Character
+CHARACTER_MOVE_SPEED = 500
+CHARACTER_MOVE_PROXIMITY = 5

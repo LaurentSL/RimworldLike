@@ -13,7 +13,7 @@ class Camera:
         self._camera_rect: pygame.Rect = camera_rect.copy()
         self._restriction_rect: pygame.Rect = restriction_rect
         self._restriction_rect_at_the_scale: pygame.Rect = restriction_rect.copy()
-        self._zoom_scale: float = 2.0
+        self._zoom_scale: float = 1.0
         self._restrict_position()
         self._player_input: PlayerInput = PlayerInput()
 
